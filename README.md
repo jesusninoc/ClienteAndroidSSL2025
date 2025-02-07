@@ -9,8 +9,7 @@ Este repositorio contiene instrucciones para generar un **almacén de claves PKC
 Ejecuta el siguiente comando para crear un **almacén PKCS12 (`.p12`)** con una clave privada y su certificado auto-firmado:
 
 ```
-keytool -genkeypair -alias servidor -keyalg RSA -keysize 2048 -validity 365 \
--keystore servidor_keystore.p12 -storetype PKCS12 -storepass 1234567
+keytool -genkeypair -alias servidor -keyalg RSA -keysize 2048 -validity 365 -keystore servidor_keystore.p12 -storetype PKCS12 -storepass 1234567
 ```
 
 ### 🔹 **Explicación de los parámetros:**
