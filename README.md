@@ -1,43 +1,53 @@
-Comando: Generar un almacén de claves PKCS12 con una clave privada y su certificado
-sh
-Copiar
-Editar
+# 🔐 Generación de Certificados SSL con `keytool`
+
+Este repositorio contiene instrucciones para generar un **almacén de claves PKCS12 (`.p12`)** para un **servidor**, y exportar su **clave pública** para que los clientes puedan validar la conexión SSL.
+
+---
+
+## 📌 **1. Generar el Certificado del Servidor**
+
+Ejecuta el siguiente comando para crear un **almacén PKCS12 (`.p12`)** con una clave privada y su certificado auto-firmado:
+
+```
 keytool -genkeypair -alias servidor -keyalg RSA -keysize 2048 -validity 365 \
 -keystore servidor_keystore.p12 -storetype PKCS12 -storepass 1234567
-✔ Este comando genera un par de claves RSA (clave pública y privada) y un certificado, y los almacena en un archivo PKCS12 (.p12).
+```
 
-📌 Explicación de cada parámetro:
+### 🔹 **Explicación de los parámetros:**
+- `-genkeypair` → Genera un par de claves (clave pública y privada).
+- `-alias servidor` → Alias para identificar la clave en el almacén.
+- `-keyalg RSA` → Algoritmo de clave (RSA).
+- `-keysize 2048` → Tamaño de la clave (2048 bits).
+- `-validity 365` → Validez del certificado (1 año).
+- `-keystore servidor_keystore.p12` → Nombre del archivo donde se guardará el almacén de claves.
+- `-storetype PKCS12` → Tipo de almacén (`.p12` en lugar de JKS).
+- `-storepass 1234567` → Contraseña del almacén.
 
--genkeypair → Genera un par de claves (pública y privada).
--alias servidor → Nombre con el que se identificará la clave en el almacén.
--keyalg RSA → Algoritmo de clave RSA.
--keysize 2048 → Tamaño de la clave en bits (2048 bits, recomendado para seguridad).
--validity 365 → Validez del certificado en días (1 año).
--keystore servidor_keystore.p12 → Archivo donde se guarda el almacén de claves.
--storetype PKCS12 → Formato del almacén de claves (.p12 en lugar de JKS).
--storepass 1234567 → Contraseña para proteger el almacén.
-📌 Resultado:
+### ✅ **Resultado:**
+Se crea el archivo `servidor_keystore.p12`, que contiene:
+- 🔐 **Clave privada**
+- 🔓 **Clave pública**
+- 📜 **Certificado auto-firmado**
 
-Se crea el archivo servidor_keystore.p12 que contiene:
-Clave privada
-Clave pública
-Certificado auto-firmado asociado
-2️⃣ Comando: Exportar solo la clave pública del certificado
-sh
-Copiar
-Editar
+---
+
+## 📌 **2. Exportar la Clave Pública del Servidor**
+
+El cliente solo necesita la **clave pública** del servidor para validar la conexión SSL.  
+Ejecuta el siguiente comando para exportarla:
+
+```
 keytool -export -alias servidor -keystore servidor_keystore.p12 -file servidor_publico.cer -storepass 1234567
-✔ Este comando extrae solo el certificado público (clave pública) del almacén servidor_keystore.p12 y lo guarda en un archivo .cer (X.509).
+```
 
-📌 Explicación de cada parámetro:
+### 🔹 **Explicación de los parámetros:**
+- `-export` → Exporta un certificado.
+- `-alias servidor` → Alias del certificado dentro del almacén.
+- `-keystore servidor_keystore.p12` → Archivo donde está almacenada la clave pública y privada.
+- `-file servidor_publico.cer` → Nombre del archivo de salida con la clave pública.
+- `-storepass 1234567` → Contraseña del almacén.
 
--export → Exporta un certificado.
--alias servidor → Nombre de la clave dentro del almacén de donde se extraerá el certificado.
--keystore servidor_keystore.p12 → Archivo que contiene la clave pública y privada.
--file servidor_publico.cer → Archivo de salida con el certificado público.
--storepass 1234567 → Contraseña del almacén para acceder a la clave.
-📌 Resultado:
-
-Se genera un archivo servidor_publico.cer que contiene:
-Solo la clave pública del certificado
-NO incluye la clave privada
+### ✅ **Resultado:**
+Se genera el archivo `servidor_publico.cer`, que contiene:
+- 🔓 **Clave pública del servidor (en formato X.509)**
+- ❌ **No incluye la clave privada**
